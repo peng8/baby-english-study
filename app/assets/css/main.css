@@ -1,0 +1,117 @@
+/* ========== 宝宝英语乐园 全局样式 ========== */
+:root {
+  --bg: #fff7ec;
+  --card: #ffffff;
+  --ink: #5b4b49;
+  --sub: #a29390;
+  --line: #f3e9db;
+
+  --pink: #ff9db6;    --pink-soft: #ffe9ef;    --pink-deep: #e76d8d;
+  --blue: #7ec3ea;    --blue-soft: #e5f4fd;    --blue-deep: #4d9fce;
+  --green: #8fd6b6;   --green-soft: #e6f7ef;   --green-deep: #55b489;
+  --yellow: #ffd66b;  --yellow-soft: #fff3d6;  --yellow-deep: #dfa53a;
+  --purple: #b7aef0;  --purple-soft: #eeecfc;  --purple-deep: #8a7bd8;
+  --orange: #ffb08a;  --orange-soft: #ffeee4;  --orange-deep: #e0854f;
+
+  --r-lg: 28px;
+  --r-md: 20px;
+  --shadow: 0 8px 24px rgba(170, 130, 95, .14);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', system-ui, sans-serif;
+  overscroll-behavior-y: none;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* ---- 主题色工具类 ---- */
+.t-pink   { --c: var(--pink);   --cs: var(--pink-soft);   --cd: var(--pink-deep); }
+.t-blue   { --c: var(--blue);   --cs: var(--blue-soft);   --cd: var(--blue-deep); }
+.t-green  { --c: var(--green);  --cs: var(--green-soft);  --cd: var(--green-deep); }
+.t-yellow { --c: var(--yellow); --cs: var(--yellow-soft); --cd: var(--yellow-deep); }
+.t-purple { --c: var(--purple); --cs: var(--purple-soft); --cd: var(--purple-deep); }
+.t-orange { --c: var(--orange); --cs: var(--orange-soft); --cd: var(--orange-deep); }
+
+/* ---- 布局 ---- */
+.app-shell { min-height: 100dvh; position: relative; overflow-x: hidden; }
+.app-main {
+  position: relative; z-index: 1;
+  max-width: 1080px; margin: 0 auto;
+  padding: 16px 16px calc(100px + env(safe-area-inset-bottom));
+}
+
+.deco {
+  position: fixed; z-index: 0; pointer-events: none;
+  user-select: none; opacity: .5; filter: saturate(.85);
+}
+
+.page-title { font-size: 26px; font-weight: 800; margin: 8px 0 4px; }
+.page-sub { color: var(--sub); font-size: 14px; margin: 0 0 16px; }
+
+/* ---- 通用组件 ---- */
+.card {
+  background: var(--card);
+  border-radius: var(--r-lg);
+  border: 3px solid #fff;
+  box-shadow: var(--shadow);
+}
+
+.chip {
+  padding: 9px 18px; border-radius: 999px;
+  background: #fff; border: 2px solid var(--line);
+  font-size: 15px; font-weight: 700; color: var(--sub);
+  white-space: nowrap; transition: all .15s;
+}
+.chip.active {
+  background: var(--c, var(--pink));
+  border-color: var(--c, var(--pink));
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+}
+.chip-row {
+  display: flex; gap: 10px;
+  overflow-x: auto; padding: 4px 2px 10px;
+  scrollbar-width: none;
+}
+.chip-row::-webkit-scrollbar { display: none; }
+
+.btn-big {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 28px; border-radius: 999px;
+  background: var(--c, var(--pink)); color: #fff;
+  font-size: 18px; font-weight: 800;
+  box-shadow: 0 6px 0 var(--cd, var(--pink-deep));
+  transition: transform .1s, box-shadow .1s;
+}
+.btn-big:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--cd, var(--pink-deep)); }
+
+/* ---- 动画 ---- */
+@keyframes float { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-12px) } }
+@keyframes pop { 0% { transform: scale(.4); opacity: 0 } 60% { transform: scale(1.12); opacity: 1 } 100% { transform: scale(1); opacity: 1 } }
+@keyframes bounce { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-14px) } }
+@keyframes burst-fly { to { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(.5); opacity: 0 } }
+@keyframes big-pop { 0% { transform: scale(.3); opacity: 0 } 50% { transform: scale(1.25); opacity: 1 } 70% { transform: scale(.95) } 100% { transform: scale(1); opacity: 1 } }
+
+/* ---- 页面过渡 ---- */
+.page-enter-active, .page-leave-active { transition: opacity .22s, transform .22s; }
+.page-enter-from { opacity: 0; transform: translateY(14px); }
+.page-leave-to { opacity: 0; }
+
+/* ---- 工具 ---- */
+.no-bar { scrollbar-width: none; }
+.no-bar::-webkit-scrollbar { display: none; }
