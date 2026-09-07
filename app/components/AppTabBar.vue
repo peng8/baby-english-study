@@ -27,11 +27,20 @@ const isActive = (to: string) => to === '/' ? route.path === '/' : route.path.st
 <style scoped>
 .tabbar {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 100;
+  margin: 0 auto; max-width: 1080px;
   display: flex; justify-content: space-around; align-items: center;
   background: rgba(255, 255, 255, .94);
   backdrop-filter: blur(10px);
   border-top: 2px solid var(--pink-soft);
   padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+}
+/* 宽屏下与 app-main 同宽，呈悬浮圆角样式 */
+@media (min-width: 1081px) {
+  .tabbar {
+    border: 3px solid #fff; border-bottom: none;
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    box-shadow: 0 -8px 24px rgba(170, 130, 95, .14);
+  }
 }
 .tab-item {
   display: flex; flex-direction: column; align-items: center; gap: 2px;
