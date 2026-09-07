@@ -3,9 +3,11 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
+  devServer: { port: 3030 },
+  nitro: { preset: 'node-server' },
   app: {
     head: {
-      title: '宝宝英语乐园',
+      title: 'Ann宝宝英语乐园',
       htmlAttrs: { lang: 'zh-CN' },
       meta: [
         { charset: 'utf-8' },
