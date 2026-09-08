@@ -25,3 +25,8 @@ logs
 
 # 本地测试用视频（生产环境由 nginx 提供独立媒体目录）
 public/media/
+
+# 部署/运维文件（含服务器信息，仅在本地保留，不入库）
+deploy.sh
+ops/
+scripts/
