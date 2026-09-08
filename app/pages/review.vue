@@ -3,7 +3,8 @@ import type { Word } from '~/data'
 import { words } from '~/data'
 
 /* 复习模块：随机抽卡 / 收藏复习 / 复习闯关（无分数只有鼓励） */
-const { speakEn } = useSpeech()
+const { speakEn, speakZh } = useSpeech()
+const { correct: sfxCorrect, wrong: sfxWrong } = useSfx()
 const { markLearned, favs } = useProgress()
 
 const mode = ref<'idle' | 'play' | 'done'>('idle')
@@ -14,8 +15,10 @@ const qIndex = ref(0)
 const current = ref<Word | null>(null)
 const options = ref<Word[]>([])
 const answered = ref(false)
+const wrongId = ref<string | null>(null)
 const celebrate = ref(0)
 const doneCelebrate = ref(0)
+let wrongTimer: ReturnType<typeof setTimeout> | null = null
 
 const pool = computed(() =>
   words
@@ -50,15 +53,28 @@ function start() {
 function pick(w: Word) {
   if (answered.value || !current.value) return
   if (w.id === current.value.id) {
+    // 答对：音效 + 中文表扬 + 撒花
     answered.value = true
     markLearned(w.id)
+    sfxCorrect()
+    speakZh('恭喜你答对了！')
     celebrate.value++
     setTimeout(() => {
       qIndex.value++
       nextQ()
-    }, 1500)
+    }, 2200)
+  }
+  else {
+    // 答错：音效 + 中文鼓励 + 抖动提示，可继续作答
+    sfxWrong()
+    speakZh('很遗憾，试试别的答案')
+    wrongId.value = w.id
+    if (wrongTimer) clearTimeout(wrongTimer)
+    wrongTimer = setTimeout(() => { wrongId.value = null }, 900)
   }
 }
+
+onUnmounted(() => { if (wrongTimer) clearTimeout(wrongTimer) })
 </script>
 
 <template>
@@ -120,7 +136,7 @@ function pick(w: Word) {
           v-for="w in options" :key="w.id"
           :word="w" size="sm"
           class="opt"
-          :class="{ glow: answered && w.id === current.id }"
+          :class="{ glow: answered && w.id === current.id, shake: wrongId === w.id }"
           @play="() => pick(w)"
         />
       </div>
@@ -175,6 +191,14 @@ function pick(w: Word) {
 @media (min-width: 720px) { .grid { grid-template-columns: repeat(4, 1fr); } }
 .opt { padding: 16px 8px; }
 .opt.glow { border-color: var(--green); box-shadow: 0 0 0 6px var(--green-soft), var(--shadow); animation: pop .35s ease-out; }
+.opt.shake { border-color: #e85d5d; animation: shake .45s ease; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
 
 .done {
   max-width: 460px; margin: 40px auto 0;
