@@ -28,7 +28,7 @@ const entries = [
         <span class="h2">🌟</span>
         <span class="h3">🎈</span>
       </div>
-      <h1 class="hero-title">宝宝英语乐园</h1>
+      <h1 class="hero-title">Ann宝宝英语乐园</h1>
       <p class="hero-tip">⏰ 每天玩 5-10 分钟，听一听就好啦</p>
     </section>
 
