@@ -45,7 +45,7 @@ export const words: Word[] = [
   /* ============ 阶段一：听音入门期 ============ */
 
   // 🐾 动物
-  { id: 's1-animals-cat', en: 'cat', zh: '小猫', emoji: '🐱', category: 'animals', stage: 1 },
+  { id: 's1-animals-cat', en: 'cat', zh: '小猫', emoji: '🐱', photo: '/photos/cat.jpg', category: 'animals', stage: 1 },
   { id: 's1-animals-dog', en: 'dog', zh: '小狗', emoji: '🐶', category: 'animals', stage: 1 },
   { id: 's1-animals-bird', en: 'bird', zh: '小鸟', emoji: '🐦', category: 'animals', stage: 1 },
   { id: 's1-animals-rabbit', en: 'rabbit', zh: '小兔', emoji: '🐰', category: 'animals', stage: 1 },

@@ -21,6 +21,8 @@ export interface Word {
   text?: string
   /** 颜色词色块 */
   color?: string
+  /** 实物照片路径（如 /photos/cat.jpg），存在时点击卡片弹出照片加深记忆 */
+  photo?: string
   category: string
   stage: Stage
 }

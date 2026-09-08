@@ -35,6 +35,15 @@ function playCurrent() {
   markLearned(w.id)
 }
 
+/* 点击卡片：发音 + 有实物照片的词弹出照片弹窗加深记忆 */
+const photoWord = ref<Word | null>(null)
+
+function tapWord(w: Word) {
+  markLearned(w.id)
+  speakEn(w.en)
+  if (w.photo) photoWord.value = w
+}
+
 watch(idx, () => { if (mode.value === 'single') playCurrent() })
 watch(mode, (m) => { if (m === 'single') playCurrent() })
 
@@ -103,7 +112,7 @@ function pickStage(s: number) {
       <WordCard
         v-for="w in displayList" :key="w.id"
         :word="w" size="sm" show-fav :fav="isFav(w.id)"
-        @play="() => { speakEn(w.en); markLearned(w.id) }"
+        @play="() => tapWord(w)"
         @fav="() => toggleFav(w.id)"
       />
     </div>
@@ -115,7 +124,7 @@ function pickStage(s: number) {
           :key="current.id"
           :word="current" size="lg" show-fav :fav="isFav(current.id)"
           class="single-card"
-          @play="playCurrent"
+          @play="() => tapWord(current)"
           @fav="() => toggleFav(current.id)"
         />
         <p class="counter">{{ idx + 1 }} / {{ displayList.length }}</p>
@@ -127,6 +136,26 @@ function pickStage(s: number) {
         <p class="tip">点击大卡片也能发音哦</p>
       </div>
     </template>
+
+    <!-- 实物照片弹窗：看真实照片，加深记忆 -->
+    <Transition name="fade">
+      <div v-if="photoWord" class="photo-overlay" @click.self="photoWord = null">
+        <div class="photo-card">
+          <button class="photo-close" @click="photoWord = null">✕</button>
+          <span class="spark s1">✨</span>
+          <span class="spark s2">⭐</span>
+
+          <div class="photo-frame">
+            <img :src="photoWord.photo" :alt="photoWord.en" class="photo-img">
+          </div>
+
+          <div class="photo-en">{{ photoWord.en }}</div>
+          <div class="photo-zh">{{ photoWord.zh }}</div>
+
+          <button class="photo-say" @click="speakEn(photoWord.en)">🔊 再听一遍</button>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -174,4 +203,94 @@ function pickStage(s: number) {
 
 .empty { padding: 50px 20px; text-align: center; color: var(--sub); }
 .empty-emoji { font-size: 52px; margin-bottom: 10px; }
+
+/* ---- 实物照片弹窗 ---- */
+.photo-overlay {
+  position: fixed; inset: 0; z-index: 260;
+  background: rgba(91, 75, 73, .45);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+}
+.photo-card {
+  position: relative;
+  width: min(88vw, 420px);
+  max-height: 90dvh;
+  background: #fff;
+  border: 4px solid var(--pink-soft);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+  padding: 16px 16px 18px;
+  animation: pop .35s ease-out;
+  display: flex; flex-direction: column; align-items: center;
+}
+.photo-close {
+  position: absolute; top: 10px; right: 10px; z-index: 2;
+  width: 38px; height: 38px; border-radius: 999px;
+  background: var(--yellow-soft); color: var(--ink);
+  font-size: 17px; font-weight: 800;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+  transition: transform .15s;
+}
+.photo-close:active { transform: scale(.88); }
+
+/* 照片相框：白边圆角，轻微呼吸缩放 */
+.photo-frame {
+  width: 100%;
+  border-radius: var(--r-md);
+  background: #fff;
+  padding: 8px;
+  box-shadow: 0 4px 14px rgba(170, 130, 95, .18), 0 0 0 3px var(--pink-soft);
+  overflow: hidden;
+}
+.photo-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: calc(var(--r-md) - 4px);
+  animation: photo-breathe 3.2s ease-in-out infinite;
+}
+@keyframes photo-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.045); }
+}
+
+/* 闪烁的小星星装饰 */
+.spark {
+  position: absolute; z-index: 2;
+  font-size: 22px;
+  animation: spark-twinkle 1.8s ease-in-out infinite;
+}
+.s1 { top: 18px; left: 18px; }
+.s2 { top: 52px; right: 52px; font-size: 17px; animation-delay: .6s; }
+@keyframes spark-twinkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: .9; }
+  50% { transform: scale(1.35) rotate(18deg); opacity: .45; }
+}
+
+.photo-en {
+  margin-top: 14px;
+  font-weight: 800; color: var(--cd);
+  font-size: clamp(28px, 6vw, 38px);
+  font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+  letter-spacing: 1px;
+  animation: bounce 1.6s ease-in-out infinite;
+  text-shadow: 0 3px 0 var(--pink-soft);
+}
+.photo-zh { color: var(--sub); font-weight: 700; font-size: 15px; margin-top: 2px; }
+
+.photo-say {
+  margin-top: 12px;
+  padding: 10px 26px;
+  border-radius: 999px;
+  background: var(--pink-soft); color: var(--cd);
+  font-weight: 800; font-size: 15px;
+  box-shadow: 0 4px 0 var(--cd);
+  transition: transform .12s, box-shadow .12s;
+}
+.photo-say:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--cd); }
+
+.fade-enter-active, .fade-leave-active { transition: opacity .25s; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
 </style>
