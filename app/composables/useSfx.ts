@@ -25,19 +25,27 @@ function tone(c: AudioContext, freq: number, start: number, dur: number, type: O
   g.connect(c.destination)
   const t = c.currentTime + start
   g.gain.setValueAtTime(0, t)
-  g.gain.linearRampToValueAtTime(vol, t + 0.02)
+  g.gain.linearRampToValueAtTime(vol, t + 0.015)
   g.gain.exponentialRampToValueAtTime(0.001, t + dur)
   o.start(t)
   o.stop(t + dur + 0.05)
 }
 
+/** 铃琴音色：基音 + 八度泛音 + 三倍频，模拟小钟琴的清脆感 */
+function bell(c: AudioContext, freq: number, start: number, dur: number, vol = 0.2) {
+  tone(c, freq, start, dur, 'sine', vol)
+  tone(c, freq * 2, start, dur * 0.55, 'sine', vol * 0.28)
+  tone(c, freq * 3, start, dur * 0.3, 'sine', vol * 0.1)
+}
+
 export function useSfx() {
-  /** 答对：欢快上行琶音（C5-E5-G5-C6） */
+  /** 答对：清脆的钟琴上行「叮-咚~」C6 → G6 → C7 */
   function correct() {
     const c = getCtx()
     if (!c) return
-    const notes = [523.25, 659.25, 783.99, 1046.5]
-    notes.forEach((f, i) => tone(c, f, i * 0.09, 0.3, 'triangle', 0.15))
+    bell(c, 1046.5, 0, 0.45, 0.2)      // C6
+    bell(c, 1568.0, 0.13, 0.65, 0.22)  // G6（尾音更长更亮）
+    bell(c, 2093.0, 0.26, 0.45, 0.09)  // C7 高光点缀
   }
 
   /** 答错：温柔下行两音（提示但不吓人） */
