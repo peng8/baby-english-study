@@ -32,6 +32,8 @@ export interface SongItem {
   emoji: string
   desc: string
   url: string
+  /** 本站视频路径（如 /media/songs/xxx.mp4），存在时优先内嵌播放 */
+  video?: string
   color: ColorTheme
 }
 

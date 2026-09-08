@@ -22,3 +22,6 @@ logs
 .env
 .env.*
 !.env.example
+
+# 本地测试用视频（生产环境由 nginx 提供独立媒体目录）
+public/media/
