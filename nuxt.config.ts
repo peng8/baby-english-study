@@ -4,7 +4,15 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
   devServer: { port: 3030 },
-  nitro: { preset: 'node-server' },
+  nitro: {
+    preset: 'node-server',
+    // 数据全在前端，无 server/api：全站预渲染为静态 HTML，
+    // TTFB 从 SSR 的数百毫秒降为毫秒级，且 CDN 可直接缓存 HTML
+    prerender: {
+      crawlLinks: true,
+      routes: ['/', '/flashcards', '/songs', '/review', '/parent', '/games'],
+    },
+  },
   app: {
     head: {
       title: 'Ann宝宝英语乐园',
