@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const games = [
   { to: '/games/listen-pick', emoji: '🔊', name: '听音识图', desc: '听声音，找一找是哪张图', color: 'blue', stage: '阶段 1+' },
-  { to: '/games/matching', emoji: '🃏', name: '图片配对', desc: '翻开小卡，找出好朋友', color: 'pink', stage: '阶段 1+' },
+  { to: '/games/matching', emoji: '🔗', name: '相同图片连连看', desc: '点两张一样的，连起来', color: 'pink', stage: '阶段 1+' },
   { to: '/games/categorize', emoji: '🧺', name: '分类小能手', desc: '把宝贝送回它的家', color: 'green', stage: '阶段 2+' },
   { to: '/games/actions', emoji: '🕺', name: '听指令做动作', desc: '跟着指令一起动起来', color: 'orange', stage: '阶段 2+' },
   { to: '/games/treasure-hunt', emoji: '🔍', name: '情景寻宝', desc: 'Where is it? 找到它！', color: 'purple', stage: '阶段 4+' },
